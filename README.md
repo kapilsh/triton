@@ -1,3 +1,34 @@
+# Triton-CPU
+
+A long-lived development branch to build an experimental CPU backend for [Triton](https://github.com/openai/triton).
+
+This repository clones the main Triton repository, but we intend to minimize
+divergences in the core (and ideally upstream anything that needs to change and
+isn't too CPU-specific).  Most of the CPU work should be in a backend
+subdirectory (similar to how GPU vendors are supported today).  We're starting
+with a clone to give ourselves maximum development flexibility as this project
+gets off the ground!
+
+# How to use it?
+
+Checkout the required submodules
+
+```
+git submodule update --init --recursive
+```
+
+Build it like a normal Triton, but just pass TRITON_CPU_BACKEND=1 to use the CPU backend over a GPU backend, if any.
+
+```
+TRITON_CPU_BACKEND=1 python3 tutorials/01-vector-add.py
+```
+
+**NOTE: It's still work in progress.**
+
+---
+
+# Upstream README
+
 <div align="center">
   <img src="https://lh5.googleusercontent.com/wzQKEsTFkrgNQO9JjhGH5wFvslJr1saLtLaJ_a6Fp_gNENpvt3VG7BmztwngU9hFJaU4CPwGiw1opQtDvTkLrxWRbO_a12Q-pdESWHgtmheIHcPbOL5ZMC4TSiJVe5ty1w=w3517" alt="Triton logo">
 </div>
@@ -41,7 +72,7 @@ pip install -U --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/
 git clone https://github.com/triton-lang/triton.git;
 cd triton;
 
-pip install ninja cmake wheel pybind11; # build-time dependencies
+pip install ninja cmake wheel; # build-time dependencies
 pip install -e python
 ```
 
@@ -54,7 +85,7 @@ cd triton;
 python -m venv .venv --prompt triton;
 source .venv/bin/activate;
 
-pip install ninja cmake wheel pybind11; # build-time dependencies
+pip install ninja cmake wheel; # build-time dependencies
 pip install -e python
 ```
 
@@ -175,7 +206,6 @@ For detailed instructions on how to debug Triton's frontend, please refer to thi
 
 - `MLIR_ENABLE_DUMP=1` dumps the IR before every MLIR pass Triton runs, for all
    kernels. Use `MLIR_ENABLE_DUMP=kernelName` to dump for a specific kernel only.
-  - Triton cache can interfere with the dump. In cases where `MLIR_ENABLE_DUMP=1` does not work, try cleaning your triton cache: `rm -r ~/.triton/cache/*`
 - `LLVM_IR_ENABLE_DUMP=1` dumps the IR before every pass run over the LLVM IR.
 - `TRITON_INTERPRET=1` uses the Triton interpreter instead of running on the
   GPU.  You can insert Python breakpoints in your kernel code!
